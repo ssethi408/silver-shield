@@ -34,11 +34,15 @@ Opening `index.html` directly in a browser also works. Node 18+ and Python 3 are
 
 ## Results (see `results/metrics.md`)
 
-| Test set | Messages | Accuracy | Missed scams | False alarms |
-|---|---|---|---|---|
-| UCI SMS held-out 30% | 1,672 | 98.3% | 10.7% | 0.3% |
-| phishing-multi SMS/email sample (different source) | 600 | 51.2% | 62.3% | 35.3% |
-| Current-style messages (EN/ES/ZH) | 22 | 86.4% | 3 of 13 | 0 of 9 |
+**Three questions, not one accuracy score:** Did the checker flag a labeled suspicious text? Did it miss one? Did it wrongly flag a labeled normal text? Only **Likely scam** counts as a catch; **Cannot tell** is a miss when the text is labeled suspicious.
+
+| Test set | Suspicious texts caught | Suspicious texts not caught | Normal texts wrongly flagged |
+|---|---:|---:|---:|
+| Older UCI SMS (1,672 held out) | 200/224 (89.3%) | 24/224 (10.7%) | 5/1,448 (0.3%) |
+| Other-source short texts, including email (600 sampled) | 113/300 (37.7%) | 187/300 (62.3%) | 106/300 (35.3%) |
+| Team-written recent-style examples (22, EN/ES/ZH) | 10/13 (76.9%) | 3/13 (23.1%) | 0/9 (too few to estimate a rate) |
+
+The second test deliberately includes 300 suspicious and 300 normal short texts; it is **not** an SMS-only sample or the natural frequency of suspicious messages. UCI's label is *spam*, not verified fraud. The team-written examples are a small smoke test, not independent validation. Never interpret “No red flags” as safe.
 
 ## Plotly evaluation dashboard
 
@@ -54,7 +58,7 @@ curl -fsSL https://cdn.plot.ly/plotly-2.35.2.min.js -o dashboard/vendor/plotly-2
 python3 dashboard/build_dashboard.py
 ```
 
-The build verifies the vendor bundle's SHA-256 before embedding it; its pinned digest is in `dashboard/build_dashboard.py`. The generated dashboard has no remote dependencies. The full raw datasets are ignored by git. Review [`results/metrics.md`](results/metrics.md) for examples of mistakes, and [`results/metrics.json`](results/metrics.json) for the measured counts driving the charts. On 600 short texts from an *unseen source* (including some email), the checker catches only 113/300 phishing/spam and falsely flags 106/300 benign messages. Do **not** pitch the 98.3% old-SMS benchmark accuracy as real-world scam protection. The 22 modern-style examples were written by the team, not collected blindly.
+The build verifies the vendor bundle's SHA-256 before embedding it; its pinned digest is in `dashboard/build_dashboard.py`. The generated dashboard has no remote dependencies. The full raw datasets are ignored by git. Review [`results/metrics.md`](results/metrics.md) for examples of mistakes, and [`results/metrics.json`](results/metrics.json) for the measured counts driving the charts. On 600 short texts from an *unseen source* (including some email), the checker catches only 113/300 phishing/spam and falsely flags 106/300 benign messages. Do **not** pitch the 89.3% old-SMS catch rate as real-world scam protection. The 22 modern-style examples were written by the team, not collected blindly.
 
 ## Working together
 
