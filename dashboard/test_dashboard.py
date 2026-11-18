@@ -41,6 +41,9 @@ def main():
     parsed.feed(page)
     assert "__OTHER_CAUGHT__" not in page and "__UCI_CAUGHT__" not in page
     assert "106 of 300" in page and "113 of 300" in page
+    assert "Optional: 2012-era SMS spam test" in page
+    assert "not texts received recently" in page
+    assert "not</em> mean each text was a confirmed fraud attempt" in page
     assert not parsed.remote, parsed.remote
     assert len(parsed.items) == 4, f"Expected offline Plotly + model + engine + dashboard; got {len(parsed.items)}"
     assert "Plotly.newPlot" in parsed.items[0]

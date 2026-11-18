@@ -38,7 +38,7 @@ Opening `index.html` directly in a browser also works. Node 18+ and Python 3 are
 
 | Test set | Suspicious texts caught | Suspicious texts not caught | Normal texts wrongly flagged |
 |---|---:|---:|---:|
-| Older UCI SMS (1,672 held out) | 200/224 (89.3%) | 24/224 (10.7%) | 5/1,448 (0.3%) |
+| 2012-era UCI SMS (1,672 held out; “spam” is not confirmed fraud) | 200/224 (89.3%) | 24/224 (10.7%) | 5/1,448 (0.3%) |
 | Other-source short texts, including email (600 sampled) | 113/300 (37.7%) | 187/300 (62.3%) | 106/300 (35.3%) |
 | Team-written recent-style examples (22, EN/ES/ZH) | 10/13 (76.9%) | 3/13 (23.1%) | 0/9 (too few to estimate a rate) |
 
