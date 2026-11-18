@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silver Shield — Live Demo</title>
+<style>
+  :root{
+    --bg:#0b0f17; --panel:#111827; --ink:#e8edf5; --muted:#8b97ab;
+    --silver:#c9d3e0; --accent:#5eead4; --danger:#ff5d6c; --warn:#ffb547; --ok:#34d399;
+    --imsg-blue:#0a84ff; --imsg-gray:#e9e9eb;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;overflow:hidden}
+  .stage{display:grid;grid-template-columns:40% 60%;height:100vh;width:100vw;
+    background:radial-gradient(1200px 700px at 75% 50%,#1a2333 0%,var(--bg) 60%)}
+
+  /* ---------- LEFT: narration ---------- */
+  .narr{padding:5vh 3vw 4vh 4vw;display:flex;flex-direction:column;gap:2.4vh;border-right:1px solid #1f2937}
+  .brand{display:flex;align-items:center;gap:14px}
+  .brand svg{width:46px;height:46px}
+  .brand h1{font-size:clamp(22px,2.4vw,38px);letter-spacing:.5px;
+    background:linear-gradient(90deg,#fff,var(--silver) 60%,#8fa3bf);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .tag{color:var(--muted);font-size:clamp(12px,1vw,16px);margin-top:-1.2vh}
+  .live{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:1.5px;color:var(--accent);
+    border:1px solid #134e4a;background:#0f2a2a;padding:5px 10px;border-radius:999px;width:max-content}
+  .live i{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 1.4s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+  .now{background:var(--panel);border:1px solid #1f2937;border-radius:18px;padding:2.4vh 1.6vw;min-height:24vh;position:relative;overflow:hidden}
+  .now .label{font-size:12px;letter-spacing:1.6px;color:var(--muted);text-transform:uppercase}
+  .now h2{font-size:clamp(18px,1.8vw,28px);margin:1vh 0 1.2vh;line-height:1.2}
+  .now p{color:#c4cede;font-size:clamp(13px,1.15vw,18px);line-height:1.5}
+  .now .fade{transition:opacity .45s ease, transform .45s ease}
+  .now .fade.out{opacity:0;transform:translateY(8px)}
+
+  .steps{list-style:none;display:flex;flex-direction:column;gap:1.1vh}
+  .steps li{display:flex;align-items:center;gap:12px;padding:1.1vh 1vw;border-radius:12px;color:var(--muted);
+    font-size:clamp(12px,1.05vw,16px);border:1px solid transparent;transition:all .35s}
+  .steps li b{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;
+    background:#1f2937;color:#cbd5e1;font-size:12px;flex:none}
+  .steps li.on{color:var(--ink);background:#0f1b2b;border-color:#1e3a5f}
+  .steps li.on b{background:var(--accent);color:#04201c}
+
+  .meters{display:grid;grid-template-columns:repeat(3,1fr);gap:1vw;margin-top:auto}
+  .meter{background:var(--panel);border:1px solid #1f2937;border-radius:14px;padding:1.6vh 1vw}
+  .meter .v{font-size:clamp(20px,2vw,32px);font-weight:700}
+  .meter .k{font-size:11px;letter-spacing:1.2px;color:var(--muted);text-transform:uppercase;margin-top:2px}
+  .v.d{color:var(--danger)} .v.o{color:var(--ok)} .v.a{color:var(--accent)}
+  .foot{font-size:11px;color:#5b6678}
+
+  /* ---------- RIGHT: phone ---------- */
+  .phonewrap{display:grid;place-items:center;position:relative}
+  .glow{position:absolute;width:60vh;height:60vh;border-radius:50%;filter:blur(90px);opacity:.35;
+    background:radial-gradient(circle,var(--accent),transparent 65%);transition:background .6s}
+  .glow.danger{background:radial-gradient(circle,var(--danger),transparent 65%)}
+  .glow.ok{background:radial-gradient(circle,var(--ok),transparent 65%)}
+
+  .phone{position:relative;height:92vh;aspect-ratio:9/19.5;border-radius:7.2vh;padding:1.25vh;
+    background:linear-gradient(145deg,#3a3f47,#15181d 40%,#2b2f36);
+    box-shadow:0 0 0 2px #50565f inset,0 40px 80px rgba(0,0,0,.6),0 0 0 .6vh #0b0d10}
+  .phone::before,.phone::after{content:"";position:absolute;width:.5vh;background:#2a2e35;border-radius:2px;left:-.5vh}
+  .phone::before{top:18%;height:5%} .phone::after{top:26%;height:9%}
+  .screen{position:relative;height:100%;width:100%;border-radius:6vh;overflow:hidden;background:#fff;color:#000;
+    display:flex;flex-direction:column;font-size:1.75vh}
+  .island{position:absolute;top:1.2vh;left:50%;transform:translateX(-50%);width:34%;height:3.6vh;background:#000;border-radius:2vh;z-index:5}
+  .status{height:6vh;display:flex;justify-content:space-between;align-items:center;padding:1vh 3.4vh 0;font-weight:600;font-size:1.8vh;z-index:4}
+  .status .r{display:flex;gap:.6vh;align-items:center}
+  .bar{display:inline-block;width:.45vh;background:#000;border-radius:1px;margin-left:1px}
+
+  .head{display:flex;flex-direction:column;align-items:center;padding:.6vh 0 1.2vh;border-bottom:1px solid #e5e5ea;
+    background:rgba(249,249,249,.94);position:relative}
+  .head .back{position:absolute;left:1.6vh;top:1.6vh;color:var(--imsg-blue);font-size:3.2vh;line-height:1}
+  .avatar{width:5.4vh;height:5.4vh;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:600;font-size:2.2vh;
+    background:linear-gradient(180deg,#a3a9b5,#858b97)}
+  .cname{font-size:1.55vh;margin-top:.5vh;color:#111}
+  .cname small{color:#8e8e93}
+
+  .thread{flex:1;overflow:hidden;padding:1.4vh 1.4vh 0;display:flex;flex-direction:column;gap:.9vh;justify-content:flex-end;
+    transition:opacity .4s}
+  .thread.clear{opacity:0}
+  .stamp{align-self:center;color:#8e8e93;font-size:1.3vh;margin:.4vh 0}
+  .b{max-width:76%;padding:.95vh 1.5vh;border-radius:2.2vh;line-height:1.32;font-size:1.72vh;
+    animation:pop .35s cubic-bezier(.2,.9,.3,1.3) both;word-wrap:break-word}
+  .b.in{background:var(--imsg-gray);align-self:flex-start;border-bottom-left-radius:.6vh}
+  .b.out{background:var(--imsg-blue);color:#fff;align-self:flex-end;border-bottom-right-radius:.6vh}
+  .b a{color:#0a63d1;text-decoration:underline}
+  .b.flagged{outline:2px solid var(--danger);outline-offset:2px}
+  .b.blurred a{filter:blur(3px)}
+  .sub{font-size:1.2vh;color:#8e8e93;align-self:flex-end;margin-top:-.5vh;animation:pop .3s both}
+  @keyframes pop{from{opacity:0;transform:translateY(10px) scale(.92)}to{opacity:1;transform:none}}
+
+  .typing{align-self:flex-start;background:var(--imsg-gray);border-radius:2.2vh;padding:1.2vh 1.6vh;display:flex;gap:.5vh}
+  .typing i{width:.85vh;height:.85vh;border-radius:50%;background:#9a9aa0;animation:dot 1s infinite}
+  .typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+  @keyframes dot{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+
+  /* Shield card inside the phone */
+  .shield{align-self:stretch;border-radius:2vh;padding:1.3vh 1.5vh;color:#fff;font-size:1.55vh;line-height:1.35;
+    animation:slide .5s cubic-bezier(.2,.9,.3,1.1) both;box-shadow:0 8px 20px rgba(0,0,0,.18)}
+  .shield.danger{background:linear-gradient(135deg,#2a0f14,#4a1520)}
+  .shield.ok{background:linear-gradient(135deg,#0c2a20,#114232)}
+  .shield .top{display:flex;align-items:center;gap:.8vh;font-weight:700;font-size:1.6vh;margin-bottom:.6vh}
+  .shield .pill{margin-left:auto;font-size:1.15vh;padding:.3vh .9vh;border-radius:99px;font-weight:700;letter-spacing:.5px}
+  .shield.danger .pill{background:var(--danger);color:#2a0a0f}
+  .shield.ok .pill{background:var(--ok);color:#06281c}
+  .shield ul{list-style:none;margin:.4vh 0 .8vh;opacity:.92}
+  .shield li::before{content:"• ";color:var(--warn)}
+  .shield .acts{display:flex;gap:.8vh;flex-wrap:wrap}
+  .shield .act{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:1.2vh;padding:.55vh 1vh;font-size:1.35vh;font-weight:600}
+  .shield .act.pri{background:#fff;color:#111}
+  .shield .act.tap{animation:tap .6s ease}
+  @keyframes tap{40%{transform:scale(.92);background:#5eead4;color:#04201c}}
+  @keyframes slide{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+
+  .composer{display:flex;align-items:center;gap:1vh;padding:1vh 1.4vh 3.4vh}
+  .composer .plus{width:3.6vh;height:3.6vh;border-radius:50%;background:#e9e9eb;display:grid;place-items:center;color:#8e8e93;font-size:2.4vh}
+  .composer .field{flex:1;border:1px solid #d1d1d6;border-radius:2vh;padding:.9vh 1.4vh;color:#8e8e93;font-size:1.65vh;min-height:3.8vh;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .composer .field.typing-now{color:#000}
+  .composer .send{width:3.6vh;height:3.6vh;border-radius:50%;background:#c7c7cc;display:grid;place-items:center;color:#fff;font-weight:700;transition:background .2s}
+  .composer .send.ready{background:var(--imsg-blue)}
+  .homebar{position:absolute;bottom:1vh;left:50%;transform:translateX(-50%);width:36%;height:.6vh;border-radius:1vh;background:#111}
+
+  /* banner notification drop */
+  .notif{position:absolute;top:6.5vh;left:1.2vh;right:1.2vh;background:rgba(245,245,247,.97);backdrop-filter:blur(10px);
+    border-radius:2.4vh;padding:1.2vh 1.5vh;box-shadow:0 10px 30px rgba(0,0,0,.25);z-index:6;font-size:1.5vh;
+    transform:translateY(-260%);opacity:0;transition:transform .5s cubic-bezier(.2,.9,.3,1.1),opacity .3s}
+  .notif.show{transform:none;opacity:1}
+  .notif .r1{display:flex;align-items:center;gap:.8vh;color:#6b6b70;font-size:1.25vh;margin-bottom:.3vh}
+  .notif .ic{width:2.4vh;height:2.4vh;border-radius:.6vh;background:linear-gradient(180deg,#65d36e,#2fb344)}
+  .notif b{color:#000}
+  .notif .shieldtag{margin-left:auto;font-weight:700;color:#b4232f}
+  .notif .shieldtag.ok{color:#11804f}
+
+  .ctrl{position:absolute;bottom:2vh;right:2vw;display:flex;gap:8px;opacity:.35;transition:opacity .2s}
+  .ctrl:hover{opacity:1}
+  .ctrl button{background:#1f2937;color:#cbd5e1;border:1px solid #334155;border-radius:8px;padding:6px 10px;font-size:12px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="stage">
+  <!-- LEFT: narration for the audience -->
+  <section class="narr">
+    <div class="brand">
+      <svg viewBox="0 0 48 48" fill="none"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#8fa3bf"/></linearGradient></defs>
+        <path d="M24 3 6 10v13c0 11 7.7 19.6 18 22 10.3-2.4 18-11 18-22V10L24 3Z" fill="url(#g)"/>
+        <path d="m16 24 6 6 11-12" stroke="#0b0f17" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <h1>Silver Shield</h1>
+    </div>
+    <div class="tag">Protects older adults from scam texts, in real time, on the phone they already use.</div>
+    <div class="live"><i></i>LIVE DEMO · SIMULATED MESSAGES</div>
+
+    <div class="now">
+      <div class="fade" id="nowBox">
+        <div class="label" id="nowLabel">Scenario 1 of 4</div>
+        <h2 id="nowTitle">A text arrives</h2>
+        <p id="nowText">Silver Shield reads every incoming message before the user taps anything.</p>
+      </div>
+    </div>
+
+    <ol class="steps" id="steps">
+      <li data-s="0"><b>1</b>Message arrives</li>
+      <li data-s="1"><b>2</b>Shield scans: links, urgency, impersonation, money asks</li>
+      <li data-s="2"><b>3</b>Plain-language warning shown in the thread</li>
+      <li data-s="3"><b>4</b>Safe reply suggested, one tap to send</li>
+    </ol>
+
+    <div class="meters">
+      <div class="meter"><div class="v d" id="mBlocked">0</div><div class="k">Scams flagged</div></div>
+      <div class="meter"><div class="v o" id="mSafe">0</div><div class="k">Safe msgs passed</div></div>
+      <div class="meter"><div class="v a" id="mTaps">0</div><div class="k">Risky taps</div></div>
+    </div>
+    <div class="foot">All messages, names and numbers in this demo are fictional.</div>
+  </section>
+
+  <!-- RIGHT: phone -->
+  <section class="phonewrap">
+    <div class="glow" id="glow"></div>
+    <div class="phone">
+      <div class="screen">
+        <div class="island"></div>
+        <div class="status">
+          <span id="clock">9:41</span>
+          <span class="r">
+            <span><span class="bar" style="height:.6vh"></span><span class="bar" style="height:.9vh"></span><span class="bar" style="height:1.2vh"></span><span class="bar" style="height:1.5vh"></span></span>
+            <span style="font-size:1.5vh">5G</span>
+            <span style="display:inline-block;width:2.8vh;height:1.4vh;border:1.5px solid #000;border-radius:.4vh;position:relative"><span style="position:absolute;inset:1.5px;width:70%;background:#000;border-radius:.2vh"></span></span>
+          </span>
+        </div>
+        <div class="notif" id="notif">
+          <div class="r1"><span class="ic"></span>MESSAGES · now<span class="shieldtag" id="notifTag">🛡 HELD</span></div>
+          <div><b id="notifFrom">Unknown</b></div>
+          <div id="notifBody" style="color:#333"></div>
+        </div>
+        <div class="head">
+          <span class="back">‹</span>
+          <div class="avatar" id="avatar">?</div>
+          <div class="cname"><span id="cname">+1 (209) 555-0142</span> <small>›</small></div>
+        </div>
+        <div class="thread" id="thread"></div>
+        <div class="composer">
+          <div class="plus">+</div>
+          <div class="field" id="field">iMessage</div>
+          <div class="send" id="send">↑</div>
+        </div>
+        <div class="homebar"></div>
+      </div>
+    </div>
+    <div class="ctrl"><button id="pause">Pause</button><button id="restart">Restart</button></div>
+  </section>
+</div>
+
+<script>
+const S = [
+  {
+    from:"+1 (209) 555-0142", av:"#", label:"Scenario 1 of 4 · Fake delivery",
+    msg:'PostalTrack: Your package is on hold due to an incomplete address. Update within 12 hrs or it will be returned: <a>postaltrack-redeliver.co/a8x</a>',
+    preview:"Your package is on hold due to an incomplete address…",
+    risk:"danger", verdict:"Likely scam · fake delivery notice",
+    reasons:["Unknown sender, look-alike web link","Deadline pressure (\"within 12 hrs\")","Real carriers don't text links to fix addresses"],
+    acts:["Don't open link","Report junk","Check my orders"],
+    reply:"Please remove this number.", replyNote:"Suggested by Silver Shield",
+    narr:[
+      ["A text arrives","A delivery notice from a number she doesn't know. This is the most common scam text in the US."],
+      ["Shield scans it first","Before she can tap, the link is checked and the wording is scored for urgency and impersonation."],
+      ["Warning, in plain words","No jargon. She sees why it's risky and the link is blurred so a slip of the finger can't open it."],
+      ["A safe next step","One tap sends a safe reply, or she can report it. The scam link is never opened."]
+    ]
+  },
+  {
+    from:"+1 (628) 555-0199", av:"?", label:"Scenario 2 of 4 · \"Grandkid in trouble\"",
+    msg:"Hi Grandma it's me, I lost my phone so this is my new number. I'm in trouble and need $800 in gift cards today. Please don't tell Mom 🙏",
+    preview:"Hi Grandma it's me, I lost my phone so this is my new number…",
+    risk:"danger", verdict:"High risk · family impersonation",
+    reasons:["\"New number\" + asks for money","Gift cards = untraceable payment","Asks her to keep it secret"],
+    acts:["Call family on saved number","Block","Report"],
+    reply:"I'm going to call you on your usual number first.", replyNote:"Suggested by Silver Shield",
+    narr:[
+      ["The emotional one","The \"grandchild in trouble\" text. It plays on love and panic, and costs older adults the most money."],
+      ["Shield spots the pattern","New number + urgent money + gift cards + secrecy. Each is a red flag; together they're a near-certain scam."],
+      ["Gentle, not scary","The warning explains the trick and offers to call the real grandchild on the number already saved."],
+      ["Verify, don't pay","The suggested reply buys time and puts her back in control. No money moves."]
+    ]
+  },
+  {
+    from:"SecureBank Alerts", av:"$", label:"Scenario 3 of 4 · Bank impersonation",
+    msg:"SecureBank: We blocked a $1,249.00 charge. If this was NOT you, reply NO and our fraud team will call you to verify your account PIN.",
+    preview:"We blocked a $1,249.00 charge. If this was NOT you, reply NO…",
+    risk:"danger", verdict:"Likely scam · bank impersonation",
+    reasons:["Sender name isn't a verified bank short code","Real banks never ask for your PIN","Big scary amount to rush a reply"],
+    acts:["Call number on my card","Don't reply NO","Report"],
+    reply:"", replyNote:"",
+    callInstead:true,
+    narr:[
+      ["Looks official","A fake fraud alert. Replying \"NO\" tells scammers the number is live and triggers a call asking for her PIN."],
+      ["Shield checks the sender","The sender isn't a verified bank code, and asking for a PIN is a hard rule-break."],
+      ["Clear instruction","Don't reply. Call the number printed on the back of your own card instead."],
+      ["Sometimes the best reply is none","Silver Shield doesn't push a reply here. It guides her to a trusted channel."]
+    ]
+  },
+  {
+    from:"Priya (daughter)", av:"P", label:"Scenario 4 of 4 · Real message",
+    msg:"Hi Mom! Are we still on for dinner Sunday at 6? I'll bring the kids 😊",
+    preview:"Hi Mom! Are we still on for dinner Sunday at 6?",
+    risk:"ok", verdict:"Safe · saved contact",
+    reasons:["Saved contact, normal conversation","No links, no money, no pressure"],
+    acts:["Looks good"],
+    reply:"Yes! Can't wait to see you all ❤️", replyNote:"Typed by user",
+    narr:[
+      ["It doesn't cry wolf","A text from her daughter. Most messages are real, and a good shield stays out of the way."],
+      ["Quick check, all clear","Known contact, no links, no money asks. Scored safe in a split second."],
+      ["Quiet green tick","No pop-ups, no friction. Too many false alarms and people stop listening."],
+      ["Life goes on","She replies as she normally would. Protection without getting in the way."]
+    ]
+  }
+];
+
+const $ = id => document.getElementById(id);
+const thread=$("thread"), field=$("field"), send=$("send"), glow=$("glow");
+let paused=false, runId=0;
+let counts={blocked:0,safe:0};
+const sleep = ms => new Promise(r=>{
+  const t0=performance.now();
+  (function tick(){ if(paused){ requestAnimationFrame(tick); return; }
+    if(performance.now()-t0>=ms) r(); else requestAnimationFrame(tick);})();
+});
+
+function setStep(i){ document.querySelectorAll("#steps li").forEach(li=>li.classList.toggle("on", +li.dataset.s===i)); }
+async function narrate(label,[t,p]){
+  const box=$("nowBox"); box.classList.add("out"); await sleep(300);
+  $("nowLabel").textContent=label; $("nowTitle").textContent=t; $("nowText").textContent=p;
+  box.classList.remove("out");
+}
+function add(html,cls){ const d=document.createElement("div"); d.className=cls; d.innerHTML=html; thread.appendChild(d); return d; }
+function bump(id,n){ $(id).textContent=n; $(id).animate([{transform:"scale(1.35)"},{transform:"scale(1)"}],{duration:400}); }
+
+async function typeInto(text){
+  field.classList.add("typing-now"); field.textContent="";
+  for(const ch of [...text]){ field.textContent+=ch; await sleep(38); }
+  send.classList.add("ready");
+}
+
+async function scenario(s, my){
+  // reset
+  thread.classList.add("clear"); await sleep(400); thread.innerHTML=""; thread.classList.remove("clear");
+  field.textContent="iMessage"; field.classList.remove("typing-now"); send.classList.remove("ready");
+  $("cname").textContent=s.from; $("avatar").textContent=s.av;
+  glow.className="glow";
+  add("Today 9:41 AM","stamp");
+
+  // 1. arrive
+  setStep(0); await narrate(s.label,s.narr[0]);
+  $("notifFrom").textContent=s.from; $("notifBody").textContent=s.preview;
+  const tag=$("notifTag"); tag.textContent = s.risk==="ok" ? "🛡 SAFE" : "🛡 HELD"; tag.className="shieldtag"+(s.risk==="ok"?" ok":"");
+  $("notif").classList.add("show"); await sleep(2200); $("notif").classList.remove("show");
+  if(my!==runId) return;
+  const ty=add("<i></i><i></i><i></i>","typing"); await sleep(1100); ty.remove();
+  const bub=add(s.msg,"b in"); await sleep(1600);
+
+  // 2. scan
+  setStep(1); await narrate(s.label,s.narr[1]);
+  const scan=add('<div class="top">🛡 Silver Shield · scanning…</div>', "shield "+(s.risk==="ok"?"ok":"danger"));
+  await sleep(1700); if(my!==runId) return;
+
+  // 3. verdict
+  setStep(2); await narrate(s.label,s.narr[2]);
+  if(s.risk!=="ok"){ bub.classList.add("flagged","blurred"); glow.classList.add("danger"); counts.blocked++; bump("mBlocked",counts.blocked); }
+  else { glow.classList.add("ok"); counts.safe++; bump("mSafe",counts.safe); }
+  scan.innerHTML = `<div class="top">🛡 ${s.verdict}<span class="pill">${s.risk==="ok"?"SAFE":"RISK"}</span></div>
+    <ul>${s.reasons.map(r=>`<li>${r}</li>`).join("")}</ul>
+    <div class="acts">${s.acts.map((a,i)=>`<span class="act ${i===0?'pri':''}">${a}</span>`).join("")}</div>`;
+  await sleep(3600); if(my!==runId) return;
+
+  // 4. reply
+  setStep(3); await narrate(s.label,s.narr[3]);
+  const first=scan.querySelector(".act"); first.classList.add("tap"); await sleep(700);
+  if(s.callInstead){
+    add("📞 Calling SecureBank (number from card)…","sub");
+    await sleep(2600);
+  } else if(s.reply){
+    await typeInto(s.reply); await sleep(500);
+    field.textContent="iMessage"; field.classList.remove("typing-now"); send.classList.remove("ready");
+    add(s.reply,"b out"); add(`Delivered · ${s.replyNote}`,"sub");
+    await sleep(2600);
+  }
+  await sleep(600);
+}
+
+async function run(){
+  const my=++runId; counts={blocked:0,safe:0};
+  $("mBlocked").textContent=0; $("mSafe").textContent=0; $("mTaps").textContent=0;
+  while(my===runId){
+    for(const s of S){ if(my!==runId) return; await scenario(s,my); }
+    counts={blocked:0,safe:0}; await sleep(800);
+    $("mBlocked").textContent=0; $("mSafe").textContent=0;
+  }
+}
+$("pause").onclick=()=>{ paused=!paused; $("pause").textContent=paused?"Play":"Pause"; };
+$("restart").onclick=()=>{ paused=false; $("pause").textContent="Pause"; run(); };
+document.addEventListener("keydown",e=>{ if(e.code==="Space"){ e.preventDefault(); $("pause").click(); } if(e.key==="r") $("restart").click(); });
+run();
+</script>
+</body>
+</html>
