@@ -37,7 +37,13 @@ class Scripts(HTMLParser):
 
 def main():
     parsed = Scripts()
-    parsed.feed(PAGE.read_text())
+    page = PAGE.read_text()
+    parsed.feed(page)
+    assert "__OTHER_CAUGHT__" not in page and "__UCI_CAUGHT__" not in page
+    assert "106 of 300" in page and "113 of 300" in page
+    assert "Optional: 2012-era SMS spam test" in page
+    assert "not texts received recently" in page
+    assert "not</em> mean each text was a confirmed fraud attempt" in page
     assert not parsed.remote, parsed.remote
     assert len(parsed.items) == 4, f"Expected offline Plotly + model + engine + dashboard; got {len(parsed.items)}"
     assert "Plotly.newPlot" in parsed.items[0]
@@ -73,6 +79,7 @@ assert.strictEqual(plots.length,5);
 for (let p of plots){assert(p.traces.length>0,p.id);for(let tr of p.traces){assert(tr.x.length===tr.y.length,p.id);assert(tr.x.every(n=>Number.isFinite(n)),p.id);}}
 assert(elements['cards'].innerHTML.includes('200 / 224'));
 assert(elements['cards'].innerHTML.includes('113 / 300'));
+assert(elements['cards'].innerHTML.includes('106 / 300'));
 assert(elements['demo-result'].children[0].textContent==='Likely scam');
 assert(typeof elements['sms'].handlers.input==='function','checker must update on every input event');
 elements['sms'].value='今晚七点到家';elements['sms'].handlers.input();
