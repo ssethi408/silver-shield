@@ -5,7 +5,7 @@
   "description": "Is this text a scam? An offline checker with explained red flags in English, Spanish and Chinese.",
   "scripts": {
     "fetch": "bash eval/fetch_data.sh",
-    "eval": "node eval/train_and_eval.js",
+    "eval": "node eval/train_and_eval.js && python3 eval/build_standalone.py",
     "check": "node checker/cli.js",
     "serve": "python3 -m http.server 8000"
   },
