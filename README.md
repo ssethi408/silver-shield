@@ -2,6 +2,14 @@
 
 Team project for Track 5 (Personal Safety), challenge A. Paste a text or email; get **Likely scam / Cannot tell / No red flags found**, the specific warning signs in plain language, and what to do next. Works in English, Spanish and Chinese. Runs entirely in the browser: no API key, nothing sent anywhere.
 
+## See it in action (60-second demo)
+
+[![Silver Shield demo: an iPhone receives scam texts and Silver Shield flags them in plain language](demo/demo-poster.jpg)](demo/silver-shield-demo.mp4)
+
+**▶ [Watch the 60-second video](demo/silver-shield-demo.mp4)**
+
+An iPhone gets four simulated texts (a fake package delivery, a "grandchild in trouble" gift-card request, a fake bank fraud alert, and a real message from family). For each one, Silver Shield shows the warning signs in plain words and suggests a safe next step. It stays quiet on the real message. All names, numbers and messages are fictional. The animated slide the video was recorded from is [`demo/index.html`](demo/index.html): open it in a browser and go full-screen (Space = pause, R = restart).
+
 ## Try it
 
 - **Live demo:** https://claude.ai/artifact/8xtWeXGbUr7FwrQVEX7Atx (private: the repo owner can share it)
