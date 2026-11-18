@@ -40,6 +40,22 @@ Opening `index.html` directly in a browser also works. Node 18+ and Python 3 are
 | phishing-multi SMS/email sample (different source) | 600 | 51.2% | 62.3% | 35.3% |
 | Current-style messages (EN/ES/ZH) | 22 | 86.4% | 3 of 13 | 0 of 9 |
 
+## Plotly evaluation dashboard
+
+Open [`dashboard/index.html`](dashboard/index.html) directly: a single-file, offline Plotly dashboard with interactive charts **and the actual checker**, which updates the verdict and explanations immediately as you type or paste a message. It shows scam catch rates, missed scams, false alarms, a rules-vs-model ablation, tiny EN/ES/ZH examples, limitations, and the verification steps a reader should take. Nothing is sent to a server. It is a local artifact, not a live data feed.
+
+To refresh it from the same source code and the labeled data:
+
+```bash
+npm run fetch
+npm run eval
+mkdir -p dashboard/vendor
+curl -fsSL https://cdn.plot.ly/plotly-2.35.2.min.js -o dashboard/vendor/plotly-2.35.2.min.js
+python3 dashboard/build_dashboard.py
+```
+
+The build verifies the vendor bundle's SHA-256 before embedding it; its pinned digest is in `dashboard/build_dashboard.py`. The generated dashboard has no remote dependencies. The full raw datasets are ignored by git. Review [`results/metrics.md`](results/metrics.md) for examples of mistakes, and [`results/metrics.json`](results/metrics.json) for the measured counts driving the charts. On 600 short texts from an *unseen source* (including some email), the checker catches only 113/300 phishing/spam and falsely flags 106/300 benign messages. Do **not** pitch the 98.3% old-SMS benchmark accuracy as real-world scam protection. The 22 modern-style examples were written by the team, not collected blindly.
+
 ## Working together
 
 - Pull before you push: `git pull --rebase`, then `git push`.
