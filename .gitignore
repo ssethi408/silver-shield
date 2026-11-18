@@ -3,8 +3,9 @@
 .env.*
 *.key
 
-# Downloaded datasets: fetch locally, don't commit
+# Downloaded datasets and pinned Plotly build input; the dashboard HTML embeds Plotly.
 data/
+dashboard/vendor/
 
 # Python / Node / OS
 __pycache__/
