@@ -1,0 +1,194 @@
+{
+  "generated": "2026-11-18",
+  "uciTest": {
+    "rulesOnly": {
+      "n": 1672,
+      "scams": 224,
+      "benign": 1448,
+      "table": {
+        "scam": {
+          "likely_scam": 70,
+          "cannot_tell": 103,
+          "no_red_flags": 51
+        },
+        "benign": {
+          "likely_scam": 5,
+          "cannot_tell": 16,
+          "no_red_flags": 1427
+        }
+      },
+      "accuracy": 0.9049043062200957,
+      "missedScamRate": 0.6875,
+      "scamsCalledNoRedFlags": 0.22767857142857142,
+      "falseAlarmRate": 0.003453038674033149,
+      "misses": 154,
+      "falseAlarms": 5
+    },
+    "modelOnly": {
+      "n": 1672,
+      "scams": 224,
+      "benign": 1448,
+      "table": {
+        "scam": {
+          "likely_scam": 205,
+          "cannot_tell": 5,
+          "no_red_flags": 14
+        },
+        "benign": {
+          "likely_scam": 4,
+          "cannot_tell": 5,
+          "no_red_flags": 1439
+        }
+      },
+      "accuracy": 0.986244019138756,
+      "missedScamRate": 0.08482142857142858,
+      "scamsCalledNoRedFlags": 0.0625,
+      "falseAlarmRate": 0.0027624309392265192,
+      "misses": 19,
+      "falseAlarms": 4
+    },
+    "combined": {
+      "n": 1672,
+      "scams": 224,
+      "benign": 1448,
+      "table": {
+        "scam": {
+          "likely_scam": 200,
+          "cannot_tell": 13,
+          "no_red_flags": 11
+        },
+        "benign": {
+          "likely_scam": 5,
+          "cannot_tell": 24,
+          "no_red_flags": 1419
+        }
+      },
+      "accuracy": 0.9826555023923444,
+      "missedScamRate": 0.10714285714285714,
+      "scamsCalledNoRedFlags": 0.049107142857142856,
+      "falseAlarmRate": 0.003453038674033149,
+      "misses": 24,
+      "falseAlarms": 5
+    }
+  },
+  "phishingMulti": {
+    "combined": {
+      "n": 600,
+      "scams": 300,
+      "benign": 300,
+      "table": {
+        "scam": {
+          "likely_scam": 113,
+          "cannot_tell": 48,
+          "no_red_flags": 139
+        },
+        "benign": {
+          "likely_scam": 106,
+          "cannot_tell": 44,
+          "no_red_flags": 150
+        }
+      },
+      "accuracy": 0.5116666666666667,
+      "missedScamRate": 0.6233333333333333,
+      "scamsCalledNoRedFlags": 0.4633333333333333,
+      "falseAlarmRate": 0.35333333333333333,
+      "misses": 187,
+      "falseAlarms": 106
+    },
+    "pool": 3342
+  },
+  "current": {
+    "all": {
+      "n": 22,
+      "scams": 13,
+      "benign": 9,
+      "table": {
+        "scam": {
+          "likely_scam": 10,
+          "cannot_tell": 3,
+          "no_red_flags": 0
+        },
+        "benign": {
+          "likely_scam": 0,
+          "cannot_tell": 2,
+          "no_red_flags": 7
+        }
+      },
+      "accuracy": 0.8636363636363636,
+      "missedScamRate": 0.23076923076923078,
+      "scamsCalledNoRedFlags": 0,
+      "falseAlarmRate": 0,
+      "misses": 3,
+      "falseAlarms": 0
+    },
+    "en": {
+      "n": 12,
+      "scams": 7,
+      "benign": 5,
+      "table": {
+        "scam": {
+          "likely_scam": 5,
+          "cannot_tell": 2,
+          "no_red_flags": 0
+        },
+        "benign": {
+          "likely_scam": 0,
+          "cannot_tell": 2,
+          "no_red_flags": 3
+        }
+      },
+      "accuracy": 0.8333333333333334,
+      "missedScamRate": 0.2857142857142857,
+      "scamsCalledNoRedFlags": 0,
+      "falseAlarmRate": 0,
+      "misses": 2,
+      "falseAlarms": 0
+    },
+    "es": {
+      "n": 5,
+      "scams": 3,
+      "benign": 2,
+      "table": {
+        "scam": {
+          "likely_scam": 3,
+          "cannot_tell": 0,
+          "no_red_flags": 0
+        },
+        "benign": {
+          "likely_scam": 0,
+          "cannot_tell": 0,
+          "no_red_flags": 2
+        }
+      },
+      "accuracy": 1,
+      "missedScamRate": 0,
+      "scamsCalledNoRedFlags": 0,
+      "falseAlarmRate": 0,
+      "misses": 0,
+      "falseAlarms": 0
+    },
+    "zh": {
+      "n": 5,
+      "scams": 3,
+      "benign": 2,
+      "table": {
+        "scam": {
+          "likely_scam": 2,
+          "cannot_tell": 1,
+          "no_red_flags": 0
+        },
+        "benign": {
+          "likely_scam": 0,
+          "cannot_tell": 0,
+          "no_red_flags": 2
+        }
+      },
+      "accuracy": 0.8,
+      "missedScamRate": 0.3333333333333333,
+      "scamsCalledNoRedFlags": 0,
+      "falseAlarmRate": 0,
+      "misses": 1,
+      "falseAlarms": 0
+    }
+  }
+}
