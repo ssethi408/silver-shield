@@ -8,21 +8,21 @@
       "table": {
         "scam": {
           "likely_scam": 70,
-          "cannot_tell": 103,
-          "no_red_flags": 51
+          "cannot_tell": 101,
+          "no_red_flags": 53
         },
         "benign": {
-          "likely_scam": 5,
-          "cannot_tell": 16,
-          "no_red_flags": 1427
+          "likely_scam": 4,
+          "cannot_tell": 15,
+          "no_red_flags": 1429
         }
       },
-      "accuracy": 0.9049043062200957,
+      "accuracy": 0.9055023923444976,
       "missedScamRate": 0.6875,
-      "scamsCalledNoRedFlags": 0.22767857142857142,
-      "falseAlarmRate": 0.003453038674033149,
+      "scamsCalledNoRedFlags": 0.23660714285714285,
+      "falseAlarmRate": 0.0027624309392265192,
       "misses": 154,
-      "falseAlarms": 5
+      "falseAlarms": 4
     },
     "modelOnly": {
       "n": 1672,
@@ -58,17 +58,17 @@
           "no_red_flags": 11
         },
         "benign": {
-          "likely_scam": 5,
-          "cannot_tell": 24,
-          "no_red_flags": 1419
+          "likely_scam": 4,
+          "cannot_tell": 23,
+          "no_red_flags": 1421
         }
       },
-      "accuracy": 0.9826555023923444,
+      "accuracy": 0.9832535885167464,
       "missedScamRate": 0.10714285714285714,
       "scamsCalledNoRedFlags": 0.049107142857142856,
-      "falseAlarmRate": 0.003453038674033149,
+      "falseAlarmRate": 0.0027624309392265192,
       "misses": 24,
-      "falseAlarms": 5
+      "falseAlarms": 4
     }
   },
   "phishingMulti": {
@@ -79,66 +79,66 @@
       "table": {
         "scam": {
           "likely_scam": 113,
-          "cannot_tell": 48,
-          "no_red_flags": 139
+          "cannot_tell": 46,
+          "no_red_flags": 141
         },
         "benign": {
-          "likely_scam": 106,
-          "cannot_tell": 44,
-          "no_red_flags": 150
+          "likely_scam": 107,
+          "cannot_tell": 42,
+          "no_red_flags": 151
         }
       },
-      "accuracy": 0.5116666666666667,
+      "accuracy": 0.51,
       "missedScamRate": 0.6233333333333333,
-      "scamsCalledNoRedFlags": 0.4633333333333333,
-      "falseAlarmRate": 0.35333333333333333,
+      "scamsCalledNoRedFlags": 0.47,
+      "falseAlarmRate": 0.3566666666666667,
       "misses": 187,
-      "falseAlarms": 106
+      "falseAlarms": 107
     },
     "pool": 3342
   },
   "current": {
     "all": {
-      "n": 22,
-      "scams": 13,
-      "benign": 9,
+      "n": 26,
+      "scams": 16,
+      "benign": 10,
       "table": {
         "scam": {
-          "likely_scam": 10,
+          "likely_scam": 13,
           "cannot_tell": 3,
           "no_red_flags": 0
         },
         "benign": {
           "likely_scam": 0,
-          "cannot_tell": 2,
+          "cannot_tell": 3,
           "no_red_flags": 7
         }
       },
-      "accuracy": 0.8636363636363636,
-      "missedScamRate": 0.23076923076923078,
+      "accuracy": 0.8846153846153846,
+      "missedScamRate": 0.1875,
       "scamsCalledNoRedFlags": 0,
       "falseAlarmRate": 0,
       "misses": 3,
       "falseAlarms": 0
     },
     "en": {
-      "n": 12,
-      "scams": 7,
-      "benign": 5,
+      "n": 16,
+      "scams": 10,
+      "benign": 6,
       "table": {
         "scam": {
-          "likely_scam": 5,
+          "likely_scam": 8,
           "cannot_tell": 2,
           "no_red_flags": 0
         },
         "benign": {
           "likely_scam": 0,
-          "cannot_tell": 2,
+          "cannot_tell": 3,
           "no_red_flags": 3
         }
       },
-      "accuracy": 0.8333333333333334,
-      "missedScamRate": 0.2857142857142857,
+      "accuracy": 0.875,
+      "missedScamRate": 0.2,
       "scamsCalledNoRedFlags": 0,
       "falseAlarmRate": 0,
       "misses": 2,

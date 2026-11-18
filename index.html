@@ -95,6 +95,14 @@ textarea {
 .flags q { quotes: "“" "”"; font-size: 16px; color: var(--muted); }
 .flags q mark { background: var(--hl); color: var(--ink); padding: 0 3px; border-radius: 3px; }
 .caveat { margin: 0; color: var(--muted); }
+.links { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.links li { display: grid; gap: 4px; padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 10px; background: var(--surface); }
+.links code { font-size: 16px; overflow-wrap: anywhere; color: var(--ink); }
+.links .tag { justify-self: start; font-size: 14px; font-weight: 700; padding: 1px 8px; border-radius: 999px; color: var(--lc); background: var(--lbg); }
+.links .bad { --lc: var(--scam); --lbg: var(--scam-bg); }
+.links .ok { --lc: var(--unsure); --lbg: var(--unsure-bg); }
+.links .official { --lc: var(--clear); --lbg: var(--clear-bg); }
+.links p { margin: 0; font-size: 16px; color: var(--muted); }
 ol.steps { margin: 0; padding-left: 24px; display: grid; gap: 6px; }
 .facts { display: grid; gap: 12px; font-size: 16px; color: var(--muted); border-top: 1.5px solid var(--line); padding-top: 22px; }
 .facts h2 { font-size: 18px; color: var(--ink); margin: 0; }
@@ -151,20 +159,22 @@ ol.steps { margin: 0; padding-left: 24px; display: grid; gap: 6px; }
 </main>
 
 <script src="checker/model.js"></script>
+<script src="checker/tlds.js"></script>
 <script src="checker/engine.js"></script>
 <script>
 (function () {
   "use strict";
   var UI = {
-    en: { title: "Is this text a scam?", lede: "Paste a text message or email you were not expecting. You will see the warning signs it contains and what to do next. Nothing you paste leaves this page.", lang: "Answer in:", auto: "Same as message", label: "The message", check: "Check this message", clear: "Clear", examples: "Or try an example (written by our team, not real messages):", why: "Warning signs we found", none: "We did not find any of the warning signs we look for.", next: "What to do next", empty: "Paste a message above, then press Check." },
-    es: { title: "¿Este mensaje es una estafa?", lede: "Pegue un mensaje de texto o correo que no esperaba. Verá las señales de alerta que contiene y qué hacer. Lo que pegue no sale de esta página.", lang: "Responder en:", auto: "Igual que el mensaje", label: "El mensaje", check: "Revisar este mensaje", clear: "Borrar", examples: "O pruebe un ejemplo (escritos por nuestro equipo, no son mensajes reales):", why: "Señales de alerta encontradas", none: "No encontramos ninguna de las señales de alerta que buscamos.", next: "Qué hacer ahora", empty: "Pegue un mensaje arriba y pulse Revisar." },
-    zh: { title: "这条短信是诈骗吗？", lede: "粘贴一条您意外收到的短信或邮件，即可看到其中的危险信号以及应对方法。您粘贴的内容不会离开本页面。", lang: "回答语言：", auto: "与信息相同", label: "信息内容", check: "检查这条信息", clear: "清除", examples: "或试试示例（由我们团队编写，并非真实信息）：", why: "发现的危险信号", none: "没有发现我们所检查的任何危险信号。", next: "下一步怎么做", empty: "请在上方粘贴信息，然后点击检查。" }
+    en: { title: "Is this text a scam?", lede: "Paste a text message or email you were not expecting. You will see the warning signs it contains and what to do next. Nothing you paste leaves this page.", lang: "Answer in:", auto: "Same as message", label: "The message", check: "Check this message", clear: "Clear", examples: "Or try an example (written by our team, not real messages):", why: "Warning signs we found", none: "We did not find any of the warning signs we look for.", next: "What to do next", links: "Links in this message", status: { not_a_valid_address: "Not a real web address", suspicious: "Suspicious link", official_domain: "Real company website", no_problems_found: "No link tricks found: still do not tap" }, empty: "Paste a message above, then press Check." },
+    es: { title: "¿Este mensaje es una estafa?", lede: "Pegue un mensaje de texto o correo que no esperaba. Verá las señales de alerta que contiene y qué hacer. Lo que pegue no sale de esta página.", lang: "Responder en:", auto: "Igual que el mensaje", label: "El mensaje", check: "Revisar este mensaje", clear: "Borrar", examples: "O pruebe un ejemplo (escritos por nuestro equipo, no son mensajes reales):", why: "Señales de alerta encontradas", none: "No encontramos ninguna de las señales de alerta que buscamos.", next: "Qué hacer ahora", links: "Enlaces en este mensaje", status: { not_a_valid_address: "No es una dirección web real", suspicious: "Enlace sospechoso", official_domain: "Sitio real de la empresa", no_problems_found: "Sin trucos detectados: igual no lo toque" }, empty: "Pegue un mensaje arriba y pulse Revisar." },
+    zh: { title: "这条短信是诈骗吗？", lede: "粘贴一条您意外收到的短信或邮件，即可看到其中的危险信号以及应对方法。您粘贴的内容不会离开本页面。", lang: "回答语言：", auto: "与信息相同", label: "信息内容", check: "检查这条信息", clear: "清除", examples: "或试试示例（由我们团队编写，并非真实信息）：", why: "发现的危险信号", none: "没有发现我们所检查的任何危险信号。", next: "下一步怎么做", links: "信息中的链接", status: { not_a_valid_address: "不是有效网址", suspicious: "可疑链接", official_domain: "公司真实官网", no_problems_found: "未发现链接伪装：仍请勿点击" }, empty: "请在上方粘贴信息，然后点击检查。" }
   };
   var EXAMPLES = [
     { name: "Toll text", text: "FasTrak: You have an unpaid toll balance of $4.35. Pay within 24 hours to avoid a late fee: fastrak-pay-example.xyz" },
     { name: "Bank", text: "This is the Wells Fargo fraud department. Your savings are at risk. To protect your money, move it to a safe account we will set up for you." },
     { name: "Hola mamá", text: "Hola mamá, perdí mi celular, este es mi nuevo número. Necesito que me hagas una transferencia urgente, no le digas a nadie." },
     { name: "公安局", text: "这里是公安局，您的身份证涉嫌洗钱案件，请立即将资金转账到安全账户配合调查，不要告诉家人。" },
+    { name: "PayPal link", text: "PayPal: we noticed unusual activity. Log in at http://paypa1-secure-example.com/login to restore access." },
     { name: "Pharmacy", text: "Your prescription is ready for pickup at the pharmacy on 24th St. Hours today 9am-7pm." }
   ];
   var ICONS = {
@@ -204,12 +214,18 @@ ol.steps { margin: 0; padding-left: 24px; display: grid; gap: 6px; }
       }
       return "<li><span>" + esc(f.explanation) + "</span>" + quote + "</li>";
     }).join("");
+    var linkCls = { not_a_valid_address: "bad", suspicious: "bad", official_domain: "official", no_problems_found: "ok" };
+    var links = r.links.map(function (lk) {
+      return '<li class="' + linkCls[lk.status] + '"><code>' + esc(lk.url) + '</code><span class="tag">' + esc(t.status[lk.status]) + "</span>" +
+        lk.explanations.map(function (e) { return "<p>" + esc(e) + "</p>"; }).join("") + "</li>";
+    }).join("");
     out.className = "result v-" + r.verdict;
     out.innerHTML =
       '<div class="verdict">' + ICONS[r.verdict] + "<strong>" + esc(r.verdictText) + "</strong></div>" +
       '<div class="body">' +
         "<h2>" + esc(t.why) + "</h2>" +
         (flags ? '<ul class="flags">' + flags + "</ul>" : '<p class="caveat">' + esc(t.none) + "</p>") +
+        (links ? "<h2>" + esc(t.links) + '</h2><ul class="links">' + links + "</ul>" : "") +
         (r.caveat ? '<p class="caveat"><b>' + esc(r.caveat) + "</b></p>" : "") +
         "<h2>" + esc(t.next) + "</h2>" +
         '<ol class="steps">' + r.nextSteps.map(function (s) { return "<li>" + esc(s) + "</li>"; }).join("") + "</ol>" +

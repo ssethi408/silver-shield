@@ -7,14 +7,14 @@ Generated 2026-11-18 by `npm run eval`. Only messages marked "likely scam" count
 | Test set | Messages | Accuracy | Missed scams | Scams told "no red flags" | False alarms |
 |---|---|---|---|---|---|
 | UCI SMS, held-out 30% (rules + model) | 1672 (224 scam / 1448 benign) | 98.3% | 10.7% | 4.9% | 0.3% |
-| phishing-multi SMS/email sample (unseen source) | 600 (300 scam / 300 benign) | 51.2% | 62.3% | 46.3% | 35.3% |
-| Current-style messages, all languages | 22 (13 scam / 9 benign) | 86.4% | 23.1% | 0.0% | 0.0% |
+| phishing-multi SMS/email sample (unseen source) | 600 (300 scam / 300 benign) | 51.0% | 62.3% | 47.0% | 35.7% |
+| Current-style messages, all languages | 26 (16 scam / 10 benign) | 88.5% | 18.8% | 0.0% | 0.0% |
 
 ## UCI held-out: which part does the work
 
 | Test set | Messages | Accuracy | Missed scams | Scams told "no red flags" | False alarms |
 |---|---|---|---|---|---|
-| Red-flag rules only | 1672 (224 scam / 1448 benign) | 90.5% | 68.8% | 22.8% | 0.3% |
+| Red-flag rules only | 1672 (224 scam / 1448 benign) | 90.6% | 68.8% | 23.7% | 0.3% |
 | Word model only | 1672 (224 scam / 1448 benign) | 98.6% | 8.5% | 6.3% | 0.3% |
 | Rules + model (shipped) | 1672 (224 scam / 1448 benign) | 98.3% | 10.7% | 4.9% | 0.3% |
 
@@ -23,20 +23,20 @@ Generated 2026-11-18 by `npm run eval`. Only messages marked "likely scam" count
 | | Likely scam | Cannot tell | No red flags |
 |---|---|---|---|
 | Scam | 200 | 13 | 11 |
-| Benign | 5 | 24 | 1419 |
+| Benign | 4 | 23 | 1421 |
 
 ### Verdict breakdown, phishing-multi sample
 
 | | Likely scam | Cannot tell | No red flags |
 |---|---|---|---|
-| Scam | 113 | 48 | 139 |
-| Benign | 106 | 44 | 150 |
+| Scam | 113 | 46 | 141 |
+| Benign | 107 | 42 | 151 |
 
 ## Current-style messages by language
 
 | Test set | Messages | Accuracy | Missed scams | Scams told "no red flags" | False alarms |
 |---|---|---|---|---|---|
-| en | 12 (7 scam / 5 benign) | 83.3% | 28.6% | 0.0% | 0.0% |
+| en | 16 (10 scam / 6 benign) | 87.5% | 20.0% | 0.0% | 0.0% |
 | es | 5 (3 scam / 2 benign) | 100.0% | 0.0% | 0.0% | 0.0% |
 | zh | 5 (3 scam / 2 benign) | 80.0% | 33.3% | 0.0% | 0.0% |
 
@@ -57,11 +57,15 @@ Generated 2026-11-18 by `npm run eval`. Only messages marked "likely scam" count
 | scam | zh/police | likely_scam | money_move, secrets, urgency, family_secret, impersonation |
 | scam | zh/package | likely_scam | delivery_toll, bad_link |
 | scam | zh/job | cannot_tell | job_invest |
+| scam | en/bank_otp | likely_scam | secrets, urgency, impersonation |
+| scam | en/lookalike_link | likely_scam | impersonation, bad_link, wording |
+| scam | en/invalid_link | likely_scam | impersonation, bad_link, wording |
 | benign | en/2fa | cannot_tell |  |
 | benign | en/appointment | cannot_tell |  |
 | benign | en/personal | no_red_flags |  |
 | benign | en/pharmacy | no_red_flags |  |
 | benign | en/personal | no_red_flags |  |
+| benign | en/official_link | cannot_tell | link |
 | benign | es/personal | no_red_flags |  |
 | benign | es/appointment | no_red_flags |  |
 | benign | zh/personal | no_red_flags |  |
@@ -85,7 +89,6 @@ Generated 2026-11-18 by `npm run eval`. Only messages marked "likely scam" count
 - (secrets) Please protect yourself from e-threats. SIB never asks for sensitive information like Passwords,ATM/SMS PIN thru email. Never share your pas
 - (secrets) Please protect yourself from e-threats. SIB never asks for sensitive information like Passwords,ATM/SMS PIN thru email. Never share your pas
 - (secrets) Open rebtel with firefox. When it loads just put plus sign in the user name place, and it will show you two numbers. The lower number is my 
-- (urgency,impersonation,link) Solve d Case : A Man Was Found Murdered On &lt;DECIMAL&gt; . &lt;#&gt; AfterNoon. 1,His wife called Police. 2,Police questioned everyone. 3,
 - (secrets) Send me your id and password
 
 ### phishing-multi scams it missed
@@ -107,8 +110,8 @@ Generated 2026-11-18 by `npm run eval`. Only messages marked "likely scam" count
 - (wording) enron / hpl actuals for november 27 , 2000 teco tap 20 . 000 / enron ; 100 . 000 / hpl gas daily
 - (prize,wording) start date : 12 / 25 / 01 ; hourahead hour : 11 ; start date : 12 / 25 / 01 ; hourahead hour : 11 ; no ancillary schedules awarded . no vari
 - (prize,wording) start date : 1 / 15 / 02 ; hourahead hour : 6 ; start date : 1 / 15 / 02 ; hourahead hour : 6 ; no ancillary schedules awarded . no variance
+- (impersonation,bad_link)  So I see a headline which reads: "Microsoft Outlining Settlement Plans" and my initial reaction is to wonder if West Jerusalem should worry
 - (link,wording) URL: http://www.newsisfree.com/click/-3,8483157,1440/ Date: Not suppliedContrary to popular belief, a new study shows women receive the same
-- (link,wording) URL: http://www.newsisfree.com/click/-3,8251864,1440/ Date: Not suppliedA hardy microbe that can withstand huge doses of radiation is most l
 
 ### Current-style scams it missed
 
