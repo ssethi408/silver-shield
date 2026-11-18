@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- page:start -->
+<title>Silver Shield</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Noto+Sans+SC:wght@400;700&display=swap">
+<style>
+/* Layout: one calm column sized for older readers; message bubble in, verdict card out, then the fine print. */
+:root {
+  --bg: #f3f6f7;
+  --surface: #ffffff;
+  --ink: #14262e;
+  --muted: #4d6470;
+  --line: #d3dee3;
+  --accent: #1f5f75;
+  --accent-ink: #ffffff;
+  --bubble: #e3ebef;
+  --scam: #b3261e;
+  --scam-bg: #fbe9e7;
+  --unsure: #8a5a00;
+  --unsure-bg: #fff3d6;
+  --clear: #2f6b3f;
+  --clear-bg: #e5f2e8;
+  --hl: #ffe08a;
+  --font: "Atkinson Hyperlegible", "Noto Sans SC", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1a1f; --surface: #16252c; --ink: #e6eef1; --muted: #9fb3bc; --line: #2a3e47;
+    --accent: #6fb8d0; --accent-ink: #0b1a20; --bubble: #203740;
+    --scam: #ff8a80; --scam-bg: #3a1a18; --unsure: #f2c46b; --unsure-bg: #33280f;
+    --clear: #8fd19e; --clear-bg: #16301e; --hl: #6b5512; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1a1f; --surface: #16252c; --ink: #e6eef1; --muted: #9fb3bc; --line: #2a3e47;
+  --accent: #6fb8d0; --accent-ink: #0b1a20; --bubble: #203740;
+  --scam: #ff8a80; --scam-bg: #3a1a18; --unsure: #f2c46b; --unsure-bg: #33280f;
+  --clear: #8fd19e; --clear-bg: #16301e; --hl: #6b5512; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font);
+  font-size: 18px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 56px;
+}
+main { max-width: 680px; margin: 0 auto; display: grid; gap: 28px; }
+header { display: grid; gap: 6px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; font-size: 14px; color: var(--accent); }
+.brand svg { width: 22px; height: 22px; }
+h1 { font-size: clamp(28px, 6vw, 38px); line-height: 1.15; margin: 0; text-wrap: balance; }
+.lede { margin: 0; color: var(--muted); max-width: 60ch; }
+.langs { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.langs span { font-size: 15px; color: var(--muted); }
+.chip {
+  font: inherit; font-size: 16px; padding: 6px 14px; border-radius: 999px; cursor: pointer;
+  border: 1.5px solid var(--line); background: var(--surface); color: var(--ink);
+}
+.chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.chip:focus-visible, button:focus-visible, textarea:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.input { display: grid; gap: 12px; }
+label.big { font-weight: 700; font-size: 20px; }
+textarea {
+  font: inherit; font-size: 19px; width: 100%; min-height: 150px; resize: vertical;
+  padding: 16px 18px; border-radius: 18px 18px 18px 6px; border: 1.5px solid var(--line);
+  background: var(--bubble); color: var(--ink);
+}
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.primary {
+  font: inherit; font-weight: 700; font-size: 20px; padding: 14px 28px; border-radius: 12px; border: 0;
+  background: var(--accent); color: var(--accent-ink); cursor: pointer;
+}
+.ghost { font: inherit; font-size: 16px; padding: 10px 16px; border-radius: 10px; border: 1.5px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; }
+.examples { display: grid; gap: 8px; }
+.examples p { margin: 0; font-size: 15px; color: var(--muted); }
+.result {
+  background: var(--surface); border: 1.5px solid var(--line); border-radius: 16px; overflow: hidden;
+}
+.verdict { display: flex; gap: 14px; align-items: center; padding: 18px 20px; border-left: 10px solid var(--v); background: var(--vbg); }
+.verdict strong { font-size: 26px; line-height: 1.2; color: var(--v); }
+.verdict .icon { flex: none; width: 36px; height: 36px; color: var(--v); }
+.v-likely_scam { --v: var(--scam); --vbg: var(--scam-bg); }
+.v-cannot_tell { --v: var(--unsure); --vbg: var(--unsure-bg); }
+.v-no_red_flags { --v: var(--clear); --vbg: var(--clear-bg); }
+.body { padding: 18px 20px 22px; display: grid; gap: 18px; }
+.body h2 { font-size: 19px; margin: 0; }
+.flags { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.flags li { display: grid; gap: 4px; padding-left: 16px; border-left: 4px solid var(--v); }
+.flags q { quotes: "“" "”"; font-size: 16px; color: var(--muted); }
+.flags q mark { background: var(--hl); color: var(--ink); padding: 0 3px; border-radius: 3px; }
+.caveat { margin: 0; color: var(--muted); }
+ol.steps { margin: 0; padding-left: 24px; display: grid; gap: 6px; }
+.facts { display: grid; gap: 12px; font-size: 16px; color: var(--muted); border-top: 1.5px solid var(--line); padding-top: 22px; }
+.facts h2 { font-size: 18px; color: var(--ink); margin: 0; }
+.facts p { margin: 0; max-width: 65ch; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+.stat { background: var(--surface); border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 14px; display: grid; gap: 2px; }
+.stat b { font-size: 24px; color: var(--ink); font-variant-numeric: tabular-nums; }
+.stat span { font-size: 14px; }
+@media (prefers-reduced-motion: no-preference) { .result { animation: rise .25s ease-out; } @keyframes rise { from { transform: translateY(6px); } to { transform: none; } } }
+</style>
+</head><body><!-- strip-for-artifact -->
+<main>
+  <header>
+    <div class="brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3z" fill="currentColor" fill-opacity=".15"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>Silver Shield</div>
+    <h1 id="t-title">Is this text a scam?</h1>
+    <p class="lede" id="t-lede">Paste a text message or email you were not expecting. You will see the warning signs it contains and what to do next. Nothing you paste leaves this page.</p>
+  </header>
+
+  <div class="langs" role="group" aria-labelledby="t-lang">
+    <span id="t-lang">Answer in:</span>
+    <button class="chip" data-lang="auto" aria-pressed="true" id="lang-auto">Same as message</button>
+    <button class="chip" data-lang="en" aria-pressed="false" id="lang-en">English</button>
+    <button class="chip" data-lang="es" aria-pressed="false" id="lang-es">Español</button>
+    <button class="chip" data-lang="zh" aria-pressed="false" id="lang-zh">中文</button>
+  </div>
+
+  <form class="input" id="form">
+    <label class="big" for="msg" id="t-label">The message</label>
+    <textarea id="msg" spellcheck="false"></textarea>
+    <div class="row">
+      <button class="primary" type="submit" id="t-check">Check this message</button>
+      <button class="ghost" type="button" id="clear">Clear</button>
+    </div>
+    <div class="examples">
+      <p id="t-examples">Or try an example (written by our team, not real messages):</p>
+      <div class="row" id="example-row"></div>
+    </div>
+  </form>
+
+  <section class="result" id="result" aria-live="polite"></section>
+
+  <section class="facts">
+    <h2>How accurate is this?</h2>
+    <p>We trained a small word model on 70% of the UCI SMS Spam Collection and tested on the other 30%, which it never saw. Only a "Likely scam" answer counts as catching a scam.</p>
+    <div class="stats">
+      <div class="stat"><b>98.3%</b><span>accuracy on 1,672 held-out texts</span></div>
+      <div class="stat"><b>10.7%</b><span>of 224 spam texts not flagged</span></div>
+      <div class="stat"><b>0.3%</b><span>of 1,448 normal texts wrongly flagged</span></div>
+      <div class="stat"><b>10 of 13</b><span>current-style scams flagged (English, Spanish, Chinese)</span></div>
+    </div>
+    <p><b>What it cannot do.</b> The training texts are from 2012 and mostly from the UK and Singapore. On a different collection of old spam emails it was right only 51% of the time (600 messages). It reads words, not links or senders, so a polite scam with no warning words can pass. A family-emergency text often gets "Cannot tell". It never says a message is safe.</p>
+    <p>Report scams at <b>reportfraud.ftc.gov</b>. Forward scam texts to <b>7726</b>.</p>
+  </section>
+</main>
+
+<script src="checker/model.js"></script>
+<script src="checker/engine.js"></script>
+<script>
+(function () {
+  "use strict";
+  var UI = {
+    en: { title: "Is this text a scam?", lede: "Paste a text message or email you were not expecting. You will see the warning signs it contains and what to do next. Nothing you paste leaves this page.", lang: "Answer in:", auto: "Same as message", label: "The message", check: "Check this message", clear: "Clear", examples: "Or try an example (written by our team, not real messages):", why: "Warning signs we found", none: "We did not find any of the warning signs we look for.", next: "What to do next", empty: "Paste a message above, then press Check." },
+    es: { title: "¿Este mensaje es una estafa?", lede: "Pegue un mensaje de texto o correo que no esperaba. Verá las señales de alerta que contiene y qué hacer. Lo que pegue no sale de esta página.", lang: "Responder en:", auto: "Igual que el mensaje", label: "El mensaje", check: "Revisar este mensaje", clear: "Borrar", examples: "O pruebe un ejemplo (escritos por nuestro equipo, no son mensajes reales):", why: "Señales de alerta encontradas", none: "No encontramos ninguna de las señales de alerta que buscamos.", next: "Qué hacer ahora", empty: "Pegue un mensaje arriba y pulse Revisar." },
+    zh: { title: "这条短信是诈骗吗？", lede: "粘贴一条您意外收到的短信或邮件，即可看到其中的危险信号以及应对方法。您粘贴的内容不会离开本页面。", lang: "回答语言：", auto: "与信息相同", label: "信息内容", check: "检查这条信息", clear: "清除", examples: "或试试示例（由我们团队编写，并非真实信息）：", why: "发现的危险信号", none: "没有发现我们所检查的任何危险信号。", next: "下一步怎么做", empty: "请在上方粘贴信息，然后点击检查。" }
+  };
+  var EXAMPLES = [
+    { name: "Toll text", text: "FasTrak: You have an unpaid toll balance of $4.35. Pay within 24 hours to avoid a late fee: fastrak-pay-example.xyz" },
+    { name: "Bank", text: "This is the Wells Fargo fraud department. Your savings are at risk. To protect your money, move it to a safe account we will set up for you." },
+    { name: "Hola mamá", text: "Hola mamá, perdí mi celular, este es mi nuevo número. Necesito que me hagas una transferencia urgente, no le digas a nadie." },
+    { name: "公安局", text: "这里是公安局，您的身份证涉嫌洗钱案件，请立即将资金转账到安全账户配合调查，不要告诉家人。" },
+    { name: "Pharmacy", text: "Your prescription is ready for pickup at the pharmacy on 24th St. Hours today 9am-7pm." }
+  ];
+  var ICONS = {
+    likely_scam: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17v.5"/></svg>',
+    cannot_tell: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.6v.6M12 17v.5"/></svg>',
+    no_red_flags: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="m8 12.5 2.8 2.8L16.5 9.5"/></svg>'
+  };
+  var langChoice = "auto";
+  var msg = document.getElementById("msg");
+  var out = document.getElementById("result");
+
+  function esc(s) { return s.replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function setUI(l) {
+    var t = UI[l];
+    document.documentElement.lang = l === "zh" ? "zh-Hans" : l;
+    ["title", "lede", "lang", "label", "check", "examples"].forEach(function (k) { document.getElementById("t-" + k).textContent = t[k]; });
+    document.getElementById("lang-auto").textContent = t.auto;
+    document.getElementById("clear").textContent = t.clear;
+  }
+  function run() {
+    var text = msg.value.trim();
+    var detected = text ? SilverShield.detectLanguage(text) : "en";
+    var l = langChoice === "auto" ? detected : langChoice;
+    setUI(l);
+    var t = UI[l];
+    if (!text) { out.className = "result"; out.innerHTML = '<div class="body"><p class="caveat">' + esc(t.empty) + "</p></div>"; return; }
+    var r = SilverShield.check(text, { lang: l });
+    // Flag rules match on the original text; explanations come back in the chosen language.
+    var flags = r.flags.map(function (f) {
+      var quote = "";
+      if (f.match) {
+        var i = text.toLowerCase().indexOf(f.match.toLowerCase());
+        if (i >= 0) {
+          var a = Math.max(0, i - 30), b = Math.min(text.length, i + f.match.length + 30);
+          quote = '<q>' + (a > 0 ? "…" : "") + esc(text.slice(a, i)) + "<mark>" + esc(text.slice(i, i + f.match.length)) + "</mark>" + esc(text.slice(i + f.match.length, b)) + (b < text.length ? "…" : "") + "</q>";
+        }
+      }
+      return "<li><span>" + esc(f.explanation) + "</span>" + quote + "</li>";
+    }).join("");
+    out.className = "result v-" + r.verdict;
+    out.innerHTML =
+      '<div class="verdict">' + ICONS[r.verdict] + "<strong>" + esc(r.verdictText) + "</strong></div>" +
+      '<div class="body">' +
+        "<h2>" + esc(t.why) + "</h2>" +
+        (flags ? '<ul class="flags">' + flags + "</ul>" : '<p class="caveat">' + esc(t.none) + "</p>") +
+        (r.caveat ? '<p class="caveat"><b>' + esc(r.caveat) + "</b></p>" : "") +
+        "<h2>" + esc(t.next) + "</h2>" +
+        '<ol class="steps">' + r.nextSteps.map(function (s) { return "<li>" + esc(s) + "</li>"; }).join("") + "</ol>" +
+      "</div>";
+  }
+
+  var row = document.getElementById("example-row");
+  EXAMPLES.forEach(function (ex, i) {
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "ghost"; b.id = "ex-" + i; b.textContent = ex.name;
+    b.addEventListener("click", function () { msg.value = ex.text; run(); });
+    row.appendChild(b);
+  });
+  document.querySelectorAll(".chip").forEach(function (c) {
+    c.addEventListener("click", function () {
+      langChoice = c.getAttribute("data-lang");
+      document.querySelectorAll(".chip").forEach(function (o) { o.setAttribute("aria-pressed", String(o === c)); });
+      run();
+    });
+  });
+  document.getElementById("form").addEventListener("submit", function (e) { e.preventDefault(); run(); });
+  document.getElementById("clear").addEventListener("click", function () { msg.value = ""; run(); msg.focus(); });
+
+  // Open in a working state with the first example checked.
+  msg.value = EXAMPLES[0].text;
+  run();
+})();
+</script>
+<!-- page:end -->
+</body>
+</html>

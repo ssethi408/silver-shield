@@ -1,0 +1,27 @@
+{
+  "note": "Short current-style test messages written by the team to test the checker, modeled on scam patterns the FTC publicly warns about (toll, package, bank, family, job, crypto). Links use made-up placeholder addresses. Benign messages are typical real-life texts. Not taken from any real person.",
+  "messages": [
+    {"label": "scam", "lang": "en", "kind": "toll", "text": "FasTrak: You have an unpaid toll balance of $4.35. Pay within 24 hours to avoid a late fee: fastrak-pay-example.xyz"},
+    {"label": "scam", "lang": "en", "kind": "package", "text": "USPS: Your package is on hold because the address is incomplete. Update it here: https://bit.ly/3xmPlE0"},
+    {"label": "scam", "lang": "en", "kind": "bank", "text": "Chase Alert: Unusual sign-in detected. Your account will be locked. Reply with the verification code we just sent to keep access."},
+    {"label": "scam", "lang": "en", "kind": "family", "text": "Hi mom, I broke my phone, this is my new number. Can you help me pay a bill today? Don't tell dad yet."},
+    {"label": "scam", "lang": "en", "kind": "job", "text": "Hello! We saw your resume. Part-time remote job, earn $300 per day liking videos. Message us on WhatsApp to start."},
+    {"label": "scam", "lang": "en", "kind": "safe_account", "text": "This is the Wells Fargo fraud department. Your savings are at risk. To protect your money, move it to a safe account we will set up for you."},
+    {"label": "scam", "lang": "en", "kind": "wrong_number", "text": "Hi Linda, are we still on for golf Saturday? Oh sorry, wrong number! You seem nice, I made a lot on crypto trading lately, happy to share tips."},
+    {"label": "scam", "lang": "es", "kind": "bank", "text": "Banco: Su cuenta ha sido bloqueada por actividad sospechosa. Verifique su identidad de inmediato en banco-seguro-example.top"},
+    {"label": "scam", "lang": "es", "kind": "family", "text": "Hola mamá, perdí mi celular, este es mi nuevo número. Necesito que me hagas una transferencia urgente, no le digas a nadie."},
+    {"label": "scam", "lang": "es", "kind": "prize", "text": "¡Felicidades! Ha ganado un premio de $1,000. Reclame su premio hoy pagando una pequeña tarifa de envío."},
+    {"label": "scam", "lang": "zh", "kind": "police", "text": "这里是公安局，您的身份证涉嫌洗钱案件，请立即将资金转账到安全账户配合调查，不要告诉家人。"},
+    {"label": "scam", "lang": "zh", "kind": "package", "text": "您的快递派送失败，需要支付关税，请点击链接处理：kuaidi-example.top"},
+    {"label": "scam", "lang": "zh", "kind": "job", "text": "招聘兼职，在家刷单，日赚500元，稳赚不赔，加微信了解。"},
+    {"label": "benign", "lang": "en", "kind": "2fa", "text": "Your Lyft code is 482913. Never share this code."},
+    {"label": "benign", "lang": "en", "kind": "appointment", "text": "Reminder: your dental cleaning is Thursday at 2:30pm. Reply C to confirm or call the office to reschedule."},
+    {"label": "benign", "lang": "en", "kind": "personal", "text": "Running 10 min late, save me a seat please"},
+    {"label": "benign", "lang": "en", "kind": "pharmacy", "text": "Your prescription is ready for pickup at the pharmacy on 24th St. Hours today 9am-7pm."},
+    {"label": "benign", "lang": "en", "kind": "personal", "text": "Happy birthday Grandpa! We'll call you tonight after dinner."},
+    {"label": "benign", "lang": "es", "kind": "personal", "text": "Hola, ¿a qué hora llegas a la cena del domingo? Llevo el postre."},
+    {"label": "benign", "lang": "es", "kind": "appointment", "text": "Recordatorio: su cita con el médico es el martes a las 10:00. Gracias."},
+    {"label": "benign", "lang": "zh", "kind": "personal", "text": "妈，我今晚七点到家，晚饭不用等我。"},
+    {"label": "benign", "lang": "zh", "kind": "appointment", "text": "提醒：您预约的体检时间为周五上午九点，请准时到达。"}
+  ]
+}
