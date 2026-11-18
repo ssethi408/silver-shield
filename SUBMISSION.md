@@ -9,7 +9,7 @@ Pencils down at 8:30. Before then:
 
 ## Team card
 
-**Team name:**
+**Team name:** Silver Shield
 
 **Statement number** (the card your corner wrote):
 
