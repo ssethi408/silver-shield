@@ -4,7 +4,7 @@ Team project for Track 5 (Personal Safety), challenge A. Paste a text or email; 
 
 ## Try it
 
-- **Live demo:** https://claude.ai/artifact/8xtWeXGbUr7FwrQVEX7Atx (ask Sudhanshu for access)
+- **Live demo:** https://claude.ai/artifact/8xtWeXGbUr7FwrQVEX7Atx (private: the repo owner can share it)
 - **One file, no setup:** download [`silver-shield.html`](silver-shield.html) and open it in any browser. It works offline.
 - **Public website:** once GitHub Pages is on (Settings → Pages → Deploy from branch → `main`, `/ (root)`), the checker is at https://ssethi408.github.io/silver-shield/
 
